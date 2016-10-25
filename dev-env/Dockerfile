@@ -11,9 +11,14 @@ RUN \
   add-apt-repository ppa:jonathonf/vim && \
   apt-get update && \
   apt-get install -y vim && \
+  touch /root/.aliases_work && \
   cd /root && git clone https://github.com/naren-m/dotfiles.git && \
   cd dotfiles &&\
   ./bootstrap.sh -f
+
+RUN \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
