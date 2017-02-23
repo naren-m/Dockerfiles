@@ -1,5 +1,4 @@
-FROM ubuntu:16.04
-
+FROM narenm/ubuntu-grpc:12
 # Install packages
 RUN \
   apt-get update && \
