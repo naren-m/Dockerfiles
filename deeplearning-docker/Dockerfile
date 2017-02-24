@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         rsync \
         software-properties-common \
         unzip \
+        git \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -49,9 +50,6 @@ RUN pip install --no-cache-dir --upgrade tensorflow
 # Set up our notebook config.
 COPY jupyter_notebook_config.py /root/.jupyter/
 
-# Copy sample notebooks.
-COPY notebooks /notebooks
-
 # Jupyter has issues with being run directly:
 #   https://github.com/ipython/ipython/issues/7062
 # We just add a little wrapper script.
@@ -64,7 +62,10 @@ EXPOSE 6006
 # IPython
 EXPOSE 8888
 
-WORKDIR "/notebooks"
+# Copy sample notebooks.
+COPY tf_tutorials /tf_workspace/tf_tutorials
+
+WORKDIR "/tf_workspace"
 
 CMD ["/run_jupyter.sh"]
 
