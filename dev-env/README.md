@@ -9,6 +9,3 @@
 - g++
 - [dotfiles]( https://github.com/naren-m/dotfiles)
 
-
-#####Programming languages
-golang version 1.7.1
