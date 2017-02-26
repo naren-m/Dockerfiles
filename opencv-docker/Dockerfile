@@ -3,6 +3,7 @@
 #   - https://github.com/naren-m/Dockerfiles/tree/master/dev-env
 FROM narenm/dev-env
 
+
 ENV PYTHON_VERSION 2.7
 ENV NUM_CORES 4
 
@@ -16,7 +17,18 @@ RUN apt-get -y install python$PYTHON_VERSION-dev wget unzip \
                libjasper-dev libv4l-dev
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py
-RUN pip install numpy matplotlib
+
+RUN pip --no-cache-dir install \
+        ipykernel \
+        jupyter \
+        matplotlib \
+        numpy \
+        scipy \
+        sklearn \
+        pandas \
+        Pillow \
+        && \
+    python -m ipykernel.kernelspec
 
 RUN wget https://github.com/Itseez/opencv/archive/3.1.0.zip -O opencv3.zip && \
     unzip -q opencv3.zip && mv /opencv-3.1.0 /opencv
@@ -43,4 +55,22 @@ RUN make -j$NUM_CORES
 RUN make install
 RUN ldconfig
 
+WORKDIR /
+
+# Set up our notebook config.
+COPY jupyter_notebook_config.py /root/.jupyter/
+
+# Jupyter has issues with being run directly:
+#   https://github.com/ipython/ipython/issues/7062
+# We just add a little wrapper script.
+COPY run_jupyter.sh /
+
+RUN chmod +x /run_jupyter.sh
+
+# IPython
+EXPOSE 8888
+
 WORKDIR /code
+
+CMD ["/run_jupyter.sh"]
+
