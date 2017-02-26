@@ -17,7 +17,10 @@ RUN \
   touch /root/.aliases_work && \
   cd /root && git clone https://github.com/naren-m/dotfiles.git && \
   cd dotfiles &&\
+  ./get_plugins.sh &&\
   ./bootstrap.sh -f
+
+RUN rm /root/.aliases_mac
 
 RUN \
   apt-get clean && \
