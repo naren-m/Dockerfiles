@@ -2,7 +2,7 @@
 # Git location of dev-env
 #   - https://github.com/naren-m/Dockerfiles/tree/master/dev-env
 FROM narenm/dev-env
-
+MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
 ENV PYTHON_VERSION 2.7
 ENV NUM_CORES 4
