@@ -16,7 +16,7 @@ RUN apt-get -y install python$PYTHON_VERSION-dev wget unzip \
                libswscale-dev libjpeg-dev libpng-dev libtiff-dev \
                libjasper-dev libv4l-dev
 
-RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py
+RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py
 
 RUN pip --no-cache-dir install \
         ipykernel \
