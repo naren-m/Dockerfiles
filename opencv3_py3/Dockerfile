@@ -72,8 +72,6 @@ RUN make -j4
 RUN make install
 RUN ldconfig
 
-
-
 RUN pip --no-cache-dir install \
         ipykernel \
         jupyter \
