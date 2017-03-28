@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   pkg-config \
   && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get install silversearcher-ag
 RUN cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
     dpkg-reconfigure locales && \
     locale-gen en_US.UTF-8 && \
