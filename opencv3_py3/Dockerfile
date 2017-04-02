@@ -28,7 +28,7 @@ RUN apt-get -y install libatlas-base-dev gfortran
 
 # Installing python-3.5.2 and dev binings as OpenCV needs python headers and development files
 #RUN apt-get update && apt-get install -y --no-install-recommends \
-##    && add-apt-repository ppa:jonathonf/python-3.6 \
+#    && add-apt-repository ppa:jonathonf/python-3.6 \
 #    && add-apt-repository ppa:fkrull/deadsnakes \
 #    && apt-get update \
 #    && apt-get install -y python3.6 python3.6-dev \

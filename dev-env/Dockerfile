@@ -22,7 +22,7 @@ RUN \
   ./get_plugins.sh &&\
   ./bootstrap.sh -f
 
-RUN rm /root/.aliases_mac
+RUN rm /root/.aliases_mac && rm -rf /root/dotfiles
 
 RUN \
   apt-get clean && \
