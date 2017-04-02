@@ -11,6 +11,7 @@ FROM gcr.io/tensorflow/tensorflow:latest-gpu
 
 MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
-WORKDIR "/notebooks"
 
+RUN mkdir /workspace && mv /notebooks /workspace
+WORKDIR "/workspace"
 CMD ["/run_jupyter.sh"]
