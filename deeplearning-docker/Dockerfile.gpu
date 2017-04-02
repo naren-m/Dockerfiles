@@ -7,7 +7,7 @@
 # Google tensorflow Dockerfile - https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/docker/Dockerfile.gpu
 # Nvidia cuda Dockerfile - https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/8.0/runtime/Dockerfile
 
-FROM gcr.io/tensorflow/tensorflow:latest-gpu
+FROM floydhub/dl-docker:gpu
 
 MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
