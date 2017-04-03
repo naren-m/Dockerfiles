@@ -243,4 +243,3 @@ COPY run_jupyter.sh /
 RUN chmod +x /run_jupyter.sh
 
 WORKDIR "/workspace"
-CMD ["/run_jupyter.sh"]
