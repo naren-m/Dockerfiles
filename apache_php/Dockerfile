@@ -9,4 +9,6 @@ RUN apt-get update \
 	php libapache2-mod-php php-mcrypt php-mysql
 # php libapache2-mod-php php-mcrypt php-mysql
 
+COPY index.html /var/www/html/index.html
+
 RUN service apache2 start
