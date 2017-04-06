@@ -129,7 +129,7 @@ RUN pip --no-cache-dir install --upgrade ipython && \
 		wheel \
 		zmq \
 		&& \
-	python -m ipykernel.kernelspec
+	python3 -m ipykernel.kernelspec
 
 
 # Install TensorFlow
