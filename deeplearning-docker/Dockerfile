@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         rsync \
         software-properties-common \
         unzip \
-        git \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -45,11 +44,21 @@ RUN pip --no-cache-dir install \
 # Install OpenCV 3.1.0
 RUN apt-get -y update
 RUN apt-get -y install  wget unzip \
-               build-essential cmake git pkg-config libatlas-base-dev \
+               build-essential \
+               cmake \
+               pkg-config \
+               libatlas-base-dev \
                gfortran \
-               libjasper-dev libgtk2.0-dev libavcodec-dev libavformat-dev \
-               libswscale-dev libjpeg-dev libpng-dev libtiff-dev \
-               libjasper-dev libv4l-dev
+               libjasper-dev \
+               libgtk2.0-dev \
+               libavcodec-dev \
+               libavformat-dev \
+               libswscale-dev \
+               libjpeg-dev \
+               libpng-dev \
+               libtiff-dev \
+               libjasper-dev \
+               libv4l-dev
 
 RUN wget https://github.com/Itseez/opencv/archive/3.1.0.zip -O opencv3.zip && \
     unzip -q opencv3.zip && mv /opencv-3.1.0 /opencv
@@ -100,5 +109,3 @@ EXPOSE 8888
 COPY tf_tutorials /tf_workspace/tf_tutorials
 
 WORKDIR "/tf_workspace"
-
-CMD ["/run_jupyter.sh"]
