@@ -19,4 +19,6 @@ RUN cd /usr/bin \
 	&& ln -s python3.6 python \
 	&& ln -s python3.6-config python-config
 
+RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py
+
 CMD ["python"]
