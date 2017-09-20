@@ -1,6 +1,6 @@
 # Docker Image 
 
-- Mounted on [narenm/dev-env](https://github.com/naren-m/Dockerfiles/tree/master/dev-env) + OpenCV 3.1.0 and Python
+- Built on [narenm/dev-env](https://github.com/naren-m/Dockerfiles/tree/master/dev-env) + OpenCV 3.1.0 and Python
 
 
 ----
