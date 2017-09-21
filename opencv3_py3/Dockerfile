@@ -1,30 +1,22 @@
 # narenm/dev-env is based on ubuntu:16.04
 # Git location of dev-env
 #   - https://github.com/naren-m/Dockerfiles/tree/master/dev-env
-FROM narenm/dev-env
+FROM narenm/py3
 MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
 # Installing prerequisites
 RUN apt-get -y update
 
 # Install Utils
-RUN apt-get -y install wget zip unzip
-
 # Install developer tools used to compile OpenCV 3.0
-RUN apt-get -y install build-essential cmake pkg-config
-
-
-# install packages used to process video streams and access frames from cameras
-RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
-RUN apt-get -y install libxvidcore-dev libx264-dev
-
+# Install packages used to process video streams and access frames from cameras
 # The highgui  module relies on the GTK library, which you should install using the following command
-RUN apt-get -y install libgtk-3-dev
-
 # install libraries that are used to optimize various functionalities inside OpenCV, such as matrix operations
-RUN apt-get -y install libatlas-base-dev gfortran
-
-
+RUN apt-get -y install wget zip unzip \
+    build-essential cmake pkg-config \
+    libavcodec-dev libavformat-dev libswscale-dev \
+    libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev \
+    libatlas-base-dev gfortran
 
 # Installing python-3.5.2 and dev binings as OpenCV needs python headers and development files
 #RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -34,23 +26,17 @@ RUN apt-get -y install libatlas-base-dev gfortran
 #    && apt-get install -y python3.6 python3.6-dev \
 #	&& rm -rf /var/lib/apt/lists/*
 
-#  Python development headers and libraries for Python 3.5
-#RUN apt-get -y install python3.5-dev
-RUN apt-get -y install python3-dev python3-pip python3-tk python3-lxml python3-six
-
-# Install pip
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
-
-# delete the cache directory
-RUN rm -rf ~/.cache/pip/
+# Python development headers and libraries for Python 3.5
+# Install pip and delete the cache directory
+RUN apt-get -y install python3-dev python3-pip python3-tk python3-lxml python3-six \
+    && wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py \
+    && rm -rf ~/.cache/pip/
 
 # Installing numpy
-RUN python3 -m pip install numpy
-
-RUN wget https://github.com/Itseez/opencv/archive/3.1.0.zip -O opencv3.zip && \
-    unzip -q opencv3.zip && mv /opencv-3.1.0 /opencv
-
-RUN wget https://github.com/Itseez/opencv_contrib/archive/3.1.0.zip -O \
+RUN python3 -m pip install numpy && \
+    wget https://github.com/Itseez/opencv/archive/3.1.0.zip -O opencv3.zip && \
+    unzip -q opencv3.zip && mv /opencv-3.1.0 /opencv && \
+    wget https://github.com/Itseez/opencv_contrib/archive/3.1.0.zip -O \
     opencv_contrib3.zip && \
     unzip -q opencv_contrib3.zip && mv /opencv_contrib-3.1.0 /opencv_contrib
 
@@ -68,15 +54,12 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D BUILD_EXAMPLES=ON ..
 
 
-RUN make -j4
-RUN make install
-RUN ldconfig
+RUN make -j4 && make install && ldconfig
 
 RUN pip --no-cache-dir install \
         ipykernel \
         jupyter \
         matplotlib \
-        numpy \
         scipy \
         sklearn \
         pandas \
@@ -85,12 +68,11 @@ RUN pip --no-cache-dir install \
     python3 -m ipykernel.kernelspec
 
 # make some useful symlinks that are expected to exist
-#RUN cd /usr/bin \
-#	&& ln -s idle3 idle \
-#	&& ln -s pydoc3 pydoc \
-#	&& ln -s python3 python \
-#	&& ln -s python3-config python-config
-
+RUN cd /usr/bin \
+	&& ln -s idle3 idle \
+	&& ln -s pydoc3.5 pydoc \
+	&& ln -s python3.5 python \
+	&& ln -s python3.5-config python-config
 
 WORKDIR /
 
