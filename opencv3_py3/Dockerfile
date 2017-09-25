@@ -1,32 +1,49 @@
-# narenm/dev-env is based on ubuntu:16.04
-# Git location of dev-env
-#   - https://github.com/naren-m/Dockerfiles/tree/master/dev-env
-FROM narenm/py3
-MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
+# narenm/py3 is based on ubuntu:16.04
+# Dockerfilese - https://github.com/naren-m/Dockerfiles
+FROM ubuntu:16.04
 
-# Installing prerequisites
-RUN apt-get -y update
+MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
 # Install Utils
 # Install developer tools used to compile OpenCV 3.0
 # Install packages used to process video streams and access frames from cameras
-# The highgui  module relies on the GTK library, which you should install using the following command
+# The highgui module relies on the GTK library, which you should install using the following command
 # install libraries that are used to optimize various functionalities inside OpenCV, such as matrix operations
-RUN apt-get -y install wget zip unzip \
-    build-essential cmake pkg-config \
-    libavcodec-dev libavformat-dev libswscale-dev \
-    libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev \
-    libatlas-base-dev gfortran
 
-# Naren susmi
-# Installing numpy
-RUN python3 -m pip install numpy
+# Installing prerequisites
+RUN apt-get update && apt-get dist-upgrade && apt-get autoremove
 
-RUN git clone https://github.com/opencv/opencv.git && cd opencv && \
-    git checkout 3.3.0 && cd ..
+# Compilers
+RUN apt-get -y install build-essential
 
-RUN git clone https://github.com/opencv/opencv_contrib.git && \
-    cd opencv_contrib && git checkout 3.3.0 && cd ..
+# Required
+RUN apt-get -y install cmake git libgtk2.0-dev pkg-config libavcodec-dev \
+    libavformat-dev libswscale-dev
+
+# Recommended optional packages
+RUN apt-get -y install python-dev python-numpy 
+RUN apt-get -y install libtbb2 libtbb-dev libjpeg-dev
+RUN apt-get -y install libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+RUN apt-get -y install libxvidcore-dev libx264-dev
+RUN apt-get -y install libgtk-3-dev
+RUN apt-get -y install libatlas-base-dev gfortran
+
+
+RUN apt-get -y install wget zip unzip curl
+RUN apt-get install python-pip && pip install --upgrade pip && rm -rf ~/.cache/pip
+RUN pip install virtualenv virtualenvwrapper
+RUN pip install --upgrade setuptools pip
+
+RUN pip install numpy
+RUN pip install scipy pandas sklearn    
+
+# Install opencv
+RUN wget https://github.com/Itseez/opencv/archive/3.3.0.zip -O opencv3.zip && \
+    unzip -q opencv3.zip && mv /opencv-3.3.0 /opencv && \
+    wget https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip -O \
+    opencv_contrib3.zip && \
+    unzip -q opencv_contrib3.zip && mv /opencv_contrib-3.3.0 /opencv_contrib
 
 RUN mkdir /opencv/build
 WORKDIR /opencv/build
@@ -37,44 +54,15 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D INSTALL_C_EXAMPLES=OFF \
     -D ENABLE_PRECOMPILED_HEADERS=OFF \
     -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules \
-    -D PYTHON_EXECUTABLE=/usr/bin/python3 \
+    -D PYTHON_EXECUTABLE=/usr/bin/python \
     -D BUILD_EXAMPLES=ON ..
 
-RUN make -j4 && make install && ldconfig
+RUN make -j8 
+RUN make install 
+RUN ldconfig
 
-RUN pip --no-cache-dir install \
-        ipykernel \
-        jupyter \
-        matplotlib \
-        scipy \
-        sklearn \
-        pandas \
-        Pillow \
-        && \
-    python3 -m ipykernel.kernelspec
-
-# make some useful symlinks that are expected to exist
-# RUN cd /usr/bin \
-# 	&& ln -s idle3 idle \
-# 	&& ln -s pydoc3.5 pydoc \
-# 	&& ln -s python3.5 python \
-# 	&& ln -s python3.5-config python-config
-
-WORKDIR /
-
-# Set up our notebook config.
-COPY jupyter_notebook_config.py /root/.jupyter/
-
-# Jupyter has issues with being run directly:
-#   https://github.com/ipython/ipython/issues/7062
-# We just add a little wrapper script.
-COPY run_jupyter.sh /
-
-RUN chmod +x /run_jupyter.sh
 
 # IPython
 EXPOSE 8888
 
 WORKDIR /code
-
-CMD ["/run_jupyter.sh"]

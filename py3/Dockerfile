@@ -4,13 +4,13 @@
 FROM narenm/dev-env
 MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
+RUN apt-get update
 # Installing python-3.6
-RUN apt-get update && apt-get install -y --no-install-recommends \
-#    && add-apt-repository ppa:jonathonf/python-3.6 \
-    && add-apt-repository ppa:fkrull/deadsnakes \
+RUN apt-get install -y --no-install-recommends
+RUN add-apt-repository ppa:fkrull/deadsnakes \
     && apt-get update \
-    && apt-get install -y python3.6 python3.6-dev \
-	&& rm -rf /var/lib/apt/lists/*
+    && apt-get install -y python3.6 python3.6-dev
+RUN rm -rf /var/lib/apt/lists/*
 
 # make some useful symlinks that are expected to exist
 RUN cd /usr/bin \
@@ -19,4 +19,22 @@ RUN cd /usr/bin \
 	&& ln -s python3.6 python \
 	&& ln -s python3.6-config python-config
 
-RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py
+WORKDIR /
+
+RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+RUN python get-pip.py && rm get-pip.py && rm -rf ~/.cache/pip/
+RUN pip install --upgrade setuptools pip
+
+RUN pip --no-cache-dir install \
+        ipykernel \
+        jupyter
+    
+# Set up our notebook config.
+COPY jupyter_notebook_config.py /root/.jupyter/
+
+# Jupyter has issues with being run directly:
+#   https://github.com/ipython/ipython/issues/7062
+# We just add a little wrapper script.
+COPY run_jupyter.sh /
+
+RUN chmod +x /run_jupyter.sh
