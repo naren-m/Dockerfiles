@@ -4,13 +4,13 @@
 FROM narenm/dev-env
 MAINTAINER Naren Mudivarthy <narenuday595@gmail.com>
 
+RUN apt-get update
 # Installing python-3.6
-RUN apt-get update && apt-get install -y --no-install-recommends \
-#    && add-apt-repository ppa:jonathonf/python-3.6 \
-    && add-apt-repository ppa:fkrull/deadsnakes \
+RUN apt-get install -y --no-install-recommends
+RUN add-apt-repository ppa:fkrull/deadsnakes \
     && apt-get update \
-    && apt-get install -y python3.6 python3.6-dev \
-	&& rm -rf /var/lib/apt/lists/*
+    && apt-get install -y python3.6 python3.6-dev
+RUN rm -rf /var/lib/apt/lists/*
 
 # make some useful symlinks that are expected to exist
 RUN cd /usr/bin \
