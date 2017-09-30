@@ -51,3 +51,11 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
     make -j$(nproc) && \
     make install && \
     ldconfig
+
+RUN cd /usr/bin \
+	&& ln -s idle3 idle \
+	&& ln -s pydoc3.6 pydoc \
+	&& ln -s python3.6 python \
+	&& ln -s python3.6-config python-config
+
+WORKDIR /code
