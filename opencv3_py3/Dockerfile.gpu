@@ -1,4 +1,4 @@
-FROM gcr.io/tensorflow/tensorflow:latest-gpu-py3
+FROM narenm/deeplearning:gpu
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -25,22 +25,29 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /tmp && \
-    cd /tmp && \
-    wget -O opencv.zip https://github.com/opencv/opencv/archive/3.2.0.zip && \
-    unzip opencv.zip && \
-    mkdir opencv-3.2.0/build && \
-    cd opencv-3.2.0/build && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+WORKDIR /
+# Step 4.1: Download opencv from Github
+RUN wget https://github.com/Itseez/opencv/archive/3.3.0.zip -O opencv3.zip && \
+    unzip -q opencv3.zip && mv /opencv-3.3.0 /opencv 
+
+# Step 4.2: Download opencv_contrib from Github
+RUN  wget https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip -O \
+    opencv_contrib3.zip && \
+    unzip -q opencv_contrib3.zip && mv /opencv_contrib-3.3.0 /opencv_contrib
+
+
+RUN mkdir /opencv/build
+WORKDIR /opencv/build
+
+RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D PYTHON3_EXECUTABLE=/usr/bin/python3 \
         -D WITH_CUDA=ON \
         -D CUDA_FAST_MATH=1 \
         -D WITH_CUBLAS=1 \
+        -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
         -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
         .. && \
     make -j$(nproc) && \
     make install && \
-    ldconfig && \
-    cd /tmp && \
-    rm -rf opencv-3.2.0 opencv.zip
+    ldconfig
