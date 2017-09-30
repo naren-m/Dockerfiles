@@ -2,14 +2,21 @@ sudo: required
 
 language:
   - python
+
 services:
   - docker
+
+install:
+  - echo "install nothing!" # put your normal pre-testing installs here
+
+script:
+  - echo "no tests!" # put your normal testing scripts here
 
 before_install:
   - cd deeplearning
   - docker build -t $DOCKER_USER/$DL_GPU -f Dockerfile.gpu .
   - docker build -t $DOCKER_USER/$DL_CPU -f Dockerfile .
- 
+
 after_install:
   - docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD";
   - docker push $DOCKER_USER/$DL_GPU
