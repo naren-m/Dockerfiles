@@ -7,4 +7,6 @@ services:
 
 before_install:
   - cd deeplearning
-  - docker build -t $DOCKER_USER/$DL_GPU .
+  - docker build -t $DOCKER_USER/$DL_GPU -f Dockerfile.gpu .
+  - docker build -t $DOCKER_USER/$DL_CPU -f Dockerfile .
+ 
