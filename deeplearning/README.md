@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/naren-m/Dockerfiles.svg?branch=master)](https://travis-ci.org/naren-m/Dockerfiles)
+
 # Deeplearning Docker
 
 Adopted from [Tensorflow docker](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/docker)
