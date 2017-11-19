@@ -21,19 +21,30 @@ RUN apt-get update && \
         python3-dev \
         python3-numpy \
         wget \
+        git \
+        graphicsmagick \
+        libgraphicsmagick1-dev \
+        libatlas-dev \
+        libavcodec-dev \
+        libavformat-dev \
+        libboost-all-dev \
+        libgtk2.0-dev \
+        libjpeg-dev \
+        liblapack-dev \
+        libswscale-dev \
         && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /
 # Step 4.1: Download opencv from Github
 RUN wget https://github.com/Itseez/opencv/archive/3.3.0.zip -O opencv3.zip && \
-    unzip -q opencv3.zip && mv /opencv-3.3.0 /opencv 
+        unzip -q opencv3.zip && mv /opencv-3.3.0 /opencv
 
 # Step 4.2: Download opencv_contrib from Github
-RUN  wget https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip -O \
-    opencv_contrib3.zip && \
-    unzip -q opencv_contrib3.zip && mv /opencv_contrib-3.3.0 /opencv_contrib
+RUN wget https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip -O \
+        opencv_contrib3.zip && \
+        unzip -q opencv_contrib3.zip && mv /opencv_contrib-3.3.0 /opencv_contrib
 
 
 RUN mkdir /opencv/build
@@ -48,14 +59,22 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
         -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
         -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
         .. && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig
+        make -j$(nproc) && \
+        make install && \
+        ldconfig
 
-RUN cd /usr/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3.6 pydoc \
-	&& ln -s python3.6 python \
-	&& ln -s python3.6-config python-config
+
+# Pre req for face_recognition
+RUN cd ~ && \
+    mkdir -p dlib && \
+    git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/ && \
+    cd  dlib/ && \
+    python3 setup.py install --yes USE_AVX_INSTRUCTIONS
+
+# Installing face_recognition
+RUN pip3 install face_recognition
+
+# Install imgcat
+RUN curl -o /usr/local/bin/imgcat -O https://raw.githubusercontent.com/gnachman/iTerm2/master/tests/imgcat && chmod +x /usr/local/bin/imgcat
 
 WORKDIR /code
